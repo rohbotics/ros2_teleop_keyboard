@@ -1,10 +1,12 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('teleop_twist_keyboard')
-import rospy
+import rclpy
+from rclpy.qos import qos_profile_default
 
 from geometry_msgs.msg import Twist
 
 import sys, select, termios, tty
+
+settings = termios.tcgetattr(sys.stdin)
 
 msg = """
 Reading from the keyboard  and Publishing to Twist!
@@ -73,14 +75,17 @@ def getKey():
 def vels(speed,turn):
 	return "currently:\tspeed %s\tturn %s " % (speed,turn)
 
-if __name__=="__main__":
-    	settings = termios.tcgetattr(sys.stdin)
-	
-	pub = rospy.Publisher('cmd_vel', Twist, queue_size = 1)
-	rospy.init_node('teleop_twist_keyboard')
+def main(args=None):	
+	if args is None:
+		args = sys.argv
 
-	speed = rospy.get_param("~speed", 0.5)
-	turn = rospy.get_param("~turn", 1.0)
+	rclpy.init(args)
+	node = rclpy.create_node('teleop_twist_keyboard')
+		
+	pub = node.create_publisher(Twist, 'cmd_vel', 	qos_profile_default)
+
+	speed = 0.5
+	turn = 1.0
 	x = 0
 	y = 0
 	z = 0
@@ -88,8 +93,8 @@ if __name__=="__main__":
 	status = 0
 
 	try:
-		print msg
-		print vels(speed,turn)
+		print(msg)
+		print(vels(speed,turn))
 		while(1):
 			key = getKey()
 			if key in moveBindings.keys():
@@ -101,9 +106,9 @@ if __name__=="__main__":
 				speed = speed * speedBindings[key][0]
 				turn = turn * speedBindings[key][1]
 
-				print vels(speed,turn)
+				print(vels(speed,turn))
 				if (status == 14):
-					print msg
+					print(msg)
 				status = (status + 1) % 15
 			else:
 				x = 0
@@ -115,18 +120,18 @@ if __name__=="__main__":
 
 			twist = Twist()
 			twist.linear.x = x*speed; twist.linear.y = y*speed; twist.linear.z = z*speed;
-			twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = th*turn
+			twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = th*turn
 			pub.publish(twist)
 
 	except:
-		print e
+		print(e)
 
 	finally:
 		twist = Twist()
-		twist.linear.x = 0; twist.linear.y = 0; twist.linear.z = 0
-		twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = 0
+		twist.linear.x = 0.0; twist.linear.y = 0.0; twist.linear.z = 0.0
+		twist.angular.x = 0.0; twist.angular.y = 0.0; twist.angular.z = 0.0
 		pub.publish(twist)
 
-    		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
 
 
