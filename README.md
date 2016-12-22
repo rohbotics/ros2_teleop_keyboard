@@ -1,5 +1,5 @@
 # teleop_twist_keyboard
-Generic Keyboard Teleop for ROS
+Generic Keyboard Teleop for ROS2
 #Launch
 To run: `teleop_twist_keyboard`
 
