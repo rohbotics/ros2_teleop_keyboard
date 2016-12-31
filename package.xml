@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>teleop_twist_keyboard</name>
-  <version>0.6.0</version>
+  <version>0.0.0</version>
   <description>Generic keyboard teleop for twist robots.</description>
 
   <maintainer email="rohan@osrfoundation.org">Rohan Agrawal</maintainer>
