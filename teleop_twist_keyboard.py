@@ -75,11 +75,11 @@ def getKey():
 def vels(speed,turn):
 	return "currently:\tspeed %s\tturn %s " % (speed,turn)
 
-def main(args=None):	
+def main(args=None):
 	if args is None:
 		args = sys.argv
 
-	rclpy.init(args)
+	rclpy.init(args=args)
 	node = rclpy.create_node('teleop_twist_keyboard')
 		
 	pub = node.create_publisher(Twist, 'cmd_vel', 	qos_profile_default)
