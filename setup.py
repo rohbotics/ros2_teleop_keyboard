@@ -1,10 +1,17 @@
 from setuptools import setup
 
+package_name = 'teleop_twist_keyboard'
+
 setup(
-    name='teleop_twist_keyboard',
+    name=package_name,
     version='0.0.0',
     packages=[],
-    py_modules=['teleop_twist_keyboard'],
+    py_modules=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
     install_requires=['setuptools'],
     maintainer='Rohan Agrawal',
     maintainer_email='rohan@osrfoundation.org',
